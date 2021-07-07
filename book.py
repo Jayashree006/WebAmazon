@@ -11,6 +11,7 @@ import matplotlib.ticker as ticker
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import requests
+from googlesearch import search
 
 no_pages = 2
 type_of_books = input ("Paid/Free :- ")
@@ -96,6 +97,30 @@ print(df.head(6))
 search_book = input("enter the string to search the book:")
 df2 = df[df['Book Name'].str.contains(search_book)]
 print(df2)
+
+#### search from google
+
+query = input("Enter the Book name:")
+pdf_query = "filetype:pdf"
+print(pdf_query+'\t'+query)
+for j in search(pdf_query+'\t'+query, tld="co.in", num=10, stop=10, pause=2):
+    print(j)
+
+#### Download
+
+def getFilename_fromCd(cd):
+    if not cd:
+        return None
+    fname = re.findall('filename=(.+)', cd)
+    if len(fname) == 0:
+        return None
+    return fname[0]   
+     
+url = input("enter the url for pdf to download:")
+r = requests.get(url, allow_redirects=True)
+filename = getFilename_fromCd(r.headers.get('content-disposition'))
+
+open('Book.pdf', 'wb').write(r.content)
 
 
 
